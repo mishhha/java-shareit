@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (updateUserRequestDto.getEmail() != null && !updateUserRequestDto.getEmail().equals(oldUser.getEmail())) {
-            if(checkUserByEmail(updateUserRequestDto.getEmail())) {
+            if (checkUserByEmail(updateUserRequestDto.getEmail())) {
                 throw new ConflictException(
                     "Пользователь с EMAIL " + updateUserRequestDto.getEmail() + " уже существует."
                 );

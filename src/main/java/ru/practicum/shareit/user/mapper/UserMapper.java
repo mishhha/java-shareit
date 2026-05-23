@@ -10,7 +10,7 @@ import ru.practicum.shareit.user.model.User;
 @NoArgsConstructor
 public class UserMapper {
 
-    public User mapToUser (NewUserRequestDto userRequestDto) {
+    public User mapToUser(NewUserRequestDto userRequestDto) {
         User user = new User();
         user.setName(userRequestDto.getName());
         user.setEmail(userRequestDto.getEmail());
@@ -18,7 +18,7 @@ public class UserMapper {
         return user;
     }
 
-    public UserResponseDto mapToUserDto (User user) {
+    public UserResponseDto mapToUserDto(User user) {
         UserResponseDto userDto = new UserResponseDto();
         userDto.setId(user.getId());
         userDto.setName(user.getName());

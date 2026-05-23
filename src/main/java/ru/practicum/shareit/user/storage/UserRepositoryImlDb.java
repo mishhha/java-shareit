@@ -25,7 +25,7 @@ public class UserRepositoryImlDb implements UserRepository {
 
     @Override
     public User save(User user) {
-        if(user == null || users.containsKey(user.getId())) {
+        if (user == null || users.containsKey(user.getId())) {
             return null;
         }
         User newUser = new User();
@@ -38,7 +38,7 @@ public class UserRepositoryImlDb implements UserRepository {
 
     @Override
     public void delete(Long userId) {
-        if(!users.containsKey(userId)) {
+        if (!users.containsKey(userId)) {
             return;
         }
         users.remove(userId);

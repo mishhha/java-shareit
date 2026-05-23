@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto saveUser(NewUserRequestDto newUserRequestDto) {
 
-        if(checkUserByEmail(newUserRequestDto.getEmail())) {
+        if (checkUserByEmail(newUserRequestDto.getEmail())) {
             throw new ConflictException(
                 "Пользователь с EMAIL " + newUserRequestDto.getEmail() + " уже существует."
             );
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto getUserById(Long userId) {
         User user = repository.findById(userId);
 
-        if(user == null) {
+        if (user == null) {
             throw new NotFoundException("Пользователь с ID " + userId + " не найден.");
         }
 
@@ -73,11 +73,11 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto updateUser(Long userId, UpdateUserRequestDto updateUserRequestDto) {
 
         User oldUser = repository.findById(userId);
-        if(oldUser == null) {
+        if (oldUser == null) {
             throw new NotFoundException("Пользователь с ID " + userId + " не найден.");
         }
 
-        if(updateUserRequestDto.getEmail() != null && !updateUserRequestDto.getEmail().equals(oldUser.getEmail())) {
+        if (updateUserRequestDto.getEmail() != null && !updateUserRequestDto.getEmail().equals(oldUser.getEmail())) {
             if(checkUserByEmail(updateUserRequestDto.getEmail())) {
                 throw new ConflictException(
                     "Пользователь с EMAIL " + updateUserRequestDto.getEmail() + " уже существует."
@@ -85,11 +85,11 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        if(updateUserRequestDto.getName() != null) {
+        if (updateUserRequestDto.getName() != null) {
             oldUser.setName(updateUserRequestDto.getName());
         }
 
-        if(updateUserRequestDto.getEmail() != null) {
+        if (updateUserRequestDto.getEmail() != null) {
             oldUser.setEmail(updateUserRequestDto.getEmail());
         }
 

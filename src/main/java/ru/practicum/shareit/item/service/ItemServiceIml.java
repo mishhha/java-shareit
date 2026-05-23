@@ -25,7 +25,7 @@ public class ItemServiceIml implements ItemService {
 
     @Override
     public List<ItemResponseDto> searchItemsForBooking(String text) {
-        if(text.isBlank()) {
+        if (text.isBlank()) {
             return List.of();
         }
 
@@ -40,7 +40,7 @@ public class ItemServiceIml implements ItemService {
     public List<ItemResponseDto> userItems(Long ownerId) {
 
         User owner = userRepository.findById(ownerId);
-        if(owner == null) {
+        if (owner == null) {
             throw new NotFoundException("Пользователь с ID " + ownerId + " не найден");
         }
 
@@ -53,7 +53,7 @@ public class ItemServiceIml implements ItemService {
     public ItemResponseDto create(Long ownerId, NewItemRequestDto newItemRequestDto) {
 
         User owner = userRepository.findById(ownerId);
-        if(owner == null) {
+        if (owner == null) {
             throw new NotFoundException("Пользователь с ID " + ownerId + " не найден");
         }
 
@@ -74,7 +74,7 @@ public class ItemServiceIml implements ItemService {
     @Override
     public ItemResponseDto findById(Long itemId) {
         Item item = itemRepository.findById(itemId);
-        if(item == null) {
+        if (item == null) {
             throw new NotFoundException("Предмет с ID " + itemId + " не найден");
         }
 
@@ -85,23 +85,23 @@ public class ItemServiceIml implements ItemService {
     public ItemResponseDto update(Long itemId, Long ownerId, UpdateItemRequestDto updateItemRequestDto) {
 
         Item item = itemRepository.findById(itemId);
-        if(item == null) {
+        if (item == null) {
             throw new NotFoundException("Предмет с ID " + itemId + " не найден");
         }
 
-        if(!item.getOwnerId().equals(ownerId)) {
+        if (!item.getOwnerId().equals(ownerId)) {
             throw new ForbiddenException("Обновлять данные предмета может только владелец.");
         }
 
-        if(updateItemRequestDto.getName() != null) {
+        if (updateItemRequestDto.getName() != null) {
             item.setName(updateItemRequestDto.getName());
         }
 
-        if(updateItemRequestDto.getDescription() != null) {
+        if (updateItemRequestDto.getDescription() != null) {
             item.setDescription(updateItemRequestDto.getDescription());
         }
 
-        if(updateItemRequestDto.getAvailable() != null) {
+        if (updateItemRequestDto.getAvailable() != null) {
             item.setAvailable(updateItemRequestDto.getAvailable());
         }
 
@@ -114,7 +114,7 @@ public class ItemServiceIml implements ItemService {
     public void delete(Long itemId) {
 
         Item item = itemRepository.findById(itemId);
-        if(item == null) {
+        if (item == null) {
             throw new NotFoundException("Предмет с ID " + itemId + " не найден");
         }
 

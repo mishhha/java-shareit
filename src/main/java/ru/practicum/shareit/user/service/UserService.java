@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface UserService {
 
-    boolean checkUserByEmail(String email);
-
     List<UserResponseDto> getAllUsers();
 
     UserResponseDto getUserById(Long userId);

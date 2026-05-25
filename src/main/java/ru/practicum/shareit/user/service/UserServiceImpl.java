@@ -2,8 +2,6 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exceptions.ConflictException;
-import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
@@ -28,22 +26,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto saveUser(NewUserRequestDto newUserRequestDto) {
 
-        if (checkUserByEmail(newUserRequestDto.getEmail())) {
-            throw new ConflictException(
-                "Пользователь с EMAIL " + newUserRequestDto.getEmail() + " уже существует."
-            );
-        }
-
         User user = userMapper.mapToUser(newUserRequestDto);
 
         User createUser = repository.save(user);
 
         return userMapper.mapToUserDto(createUser);
-    }
-
-    @Override
-    public boolean checkUserByEmail(String email) {
-        return repository.checkUserByEmail(email);
     }
 
     @Override
@@ -57,10 +44,6 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto getUserById(Long userId) {
         User user = repository.findById(userId);
 
-        if (user == null) {
-            throw new NotFoundException("Пользователь с ID " + userId + " не найден.");
-        }
-
         List<Item> items = itemRepository.findItemsByOwnerId(userId);
 
         UserResponseDto dto = userMapper.mapToUserDto(user);
@@ -73,16 +56,11 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto updateUser(Long userId, UpdateUserRequestDto updateUserRequestDto) {
 
         User oldUser = repository.findById(userId);
-        if (oldUser == null) {
-            throw new NotFoundException("Пользователь с ID " + userId + " не найден.");
-        }
 
-        if (updateUserRequestDto.getEmail() != null && !updateUserRequestDto.getEmail().equals(oldUser.getEmail())) {
-            if (checkUserByEmail(updateUserRequestDto.getEmail())) {
-                throw new ConflictException(
-                    "Пользователь с EMAIL " + updateUserRequestDto.getEmail() + " уже существует."
-                );
-            }
+        if (updateUserRequestDto.getEmail() != null &&
+            !updateUserRequestDto.getEmail().equalsIgnoreCase(oldUser.getEmail())
+        ) {
+            repository.checkUserByEmail(updateUserRequestDto.getEmail());
         }
 
         if (updateUserRequestDto.getName() != null) {

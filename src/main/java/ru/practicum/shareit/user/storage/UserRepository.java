@@ -16,5 +16,5 @@ public interface UserRepository {
 
     User update(User user);
 
-    boolean checkUserByEmail(String email);
+    void checkUserByEmail(String email);
 }

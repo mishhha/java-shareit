@@ -19,14 +19,6 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    /*
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<ItemResponseDto> findAll() {
-        return itemService.findAll();
-    }
-     */
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ItemResponseDto> findUserItems(@RequestHeader(value = "X-Sharer-User-Id") @Positive Long ownerId) {

@@ -1,4 +1,4 @@
 package ru.practicum.shareit.request.mapper;
 
-public class ItemRowMapper {
+public class ItemRequestMapper {
 }

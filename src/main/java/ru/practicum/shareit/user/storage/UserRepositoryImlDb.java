@@ -1,12 +1,13 @@
 package ru.practicum.shareit.user.storage;
 
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.exceptions.ConflictException;
+import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class UserRepositoryImlDb implements UserRepository {
@@ -20,42 +21,51 @@ public class UserRepositoryImlDb implements UserRepository {
 
     @Override
     public User findById(Long id) {
+
+        if (users.get(id) == null) {
+            throw new NotFoundException("Пользователь с ID " + id + " не найден.");
+        }
+
         return users.get(id);
     }
 
     @Override
     public User save(User user) {
-        if (user == null || users.containsKey(user.getId())) {
-            return null;
+        if (user == null) {
+            throw new IllegalArgumentException("Данные пользователя не могут быть null.");
         }
-        User newUser = new User();
-        newUser.setId(nextGenId());
-        newUser.setEmail(user.getEmail());
-        newUser.setName(user.getName());
-        users.put(newUser.getId(), newUser);
-        return newUser;
+
+        checkUserByEmail(user.getEmail());
+
+        user.setId(nextGenId());
+
+        users.put(user.getId(), user);
+        return user;
     }
 
     @Override
     public void delete(Long userId) {
         if (!users.containsKey(userId)) {
-            return;
+            throw new ConflictException("Пользователь с ID " + userId + " не существует.");
         }
         users.remove(userId);
     }
 
     @Override
     public User update(User updateUser) {
+
         users.put(updateUser.getId(), updateUser);
         return updateUser;
     }
 
     @Override
-    public boolean checkUserByEmail(String email) {
-        return users.values().stream()
-            .map(User::getEmail)
-            .filter(Objects::nonNull)
-            .anyMatch(storageEmail -> storageEmail.equalsIgnoreCase(email));
+    public void checkUserByEmail(String email) {
+        boolean exists = users.values().stream()
+            .anyMatch(u -> u.getEmail() != null && u.getEmail().equalsIgnoreCase(email));
+
+        if (exists) {
+            throw new ConflictException("Пользователь с EMAIL " + email + " уже существует.");
+        }
     }
 
     public Long nextGenId() {

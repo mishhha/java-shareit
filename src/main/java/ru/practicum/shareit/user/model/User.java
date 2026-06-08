@@ -1,16 +1,19 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.Data;
-import ru.practicum.shareit.item.model.Item;
+import jakarta.persistence.*;
+import lombok.*;
 
-import java.util.List;
-
-@Data
+@Entity
+@Table(name = "users")
+@Getter @Setter @NoArgsConstructor @ToString
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "email")
     private String email;
+    @Column(name = "name")
     private String name;
-    private List<Item> itemList;
 
 }

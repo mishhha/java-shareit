@@ -32,4 +32,4 @@ CREATE TABLE IF NOT EXISTS comments (
     text VARCHAR(2000) NOT NULL,
     created TIMESTAMP NOT NULL,
     CONSTRAINT pk_comment PRIMARY KEY (id)
-)
+);

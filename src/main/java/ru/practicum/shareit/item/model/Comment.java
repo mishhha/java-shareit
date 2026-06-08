@@ -7,9 +7,11 @@ import ru.practicum.shareit.user.model.User;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "comments")
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
-@Getter @Setter @ToString
+@Table(name = "comments")
 public class Comment {
 
     @Id

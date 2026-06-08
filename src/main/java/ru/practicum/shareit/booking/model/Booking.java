@@ -8,8 +8,11 @@ import ru.practicum.shareit.user.model.User;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "bookings")
-@Getter @Setter @NoArgsConstructor @ToString(exclude = {"item", "booker"})
+@ToString(exclude = {"item", "booker"})
 public class Booking {
 
     @Id

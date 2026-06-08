@@ -8,9 +8,11 @@ import lombok.ToString;
 import ru.practicum.shareit.user.model.User;
 
 @Entity
-@Table(name = "items")
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
-@Getter @Setter @ToString
+@Table(name = "items")
 public class Item {
 
     @Id

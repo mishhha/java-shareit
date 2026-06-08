@@ -3,7 +3,6 @@ package ru.practicum.shareit.user.service;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -29,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private final ItemMapper itemMapper;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public UserResponseDto saveUser(NewUserRequestDto newUserRequestDto) {
 
         if (repository.existsUserByEmail(newUserRequestDto.getEmail())) {
@@ -68,7 +67,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public UserResponseDto updateUser(Long userId, UpdateUserRequestDto updateUserRequestDto) {
 
         Optional<User> oldUser = repository.findById(userId);
@@ -104,7 +103,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public void delete(Long id) {
         if (!repository.existsById(id)) {
             throw new NotFoundException("Пользователь с ID " + id + " не найден");

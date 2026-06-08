@@ -4,7 +4,6 @@ import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -86,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public ItemResponseDto create(Long ownerId, NewItemRequestDto newItemRequestDto) {
 
         Optional<User> owner = userRepository.findById(ownerId);
@@ -127,7 +126,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public ItemResponseDto update(Long itemId, Long ownerId, UpdateItemRequestDto updateItemRequestDto) {
 
         Optional<Item> findItem = itemRepository.findById(itemId);
@@ -159,7 +158,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public void delete(Long itemId) {
 
         Optional<Item> findItem = itemRepository.findById(itemId);

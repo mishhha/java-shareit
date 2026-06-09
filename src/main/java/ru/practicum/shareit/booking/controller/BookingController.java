@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.controller;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.RequestBookingDto;
 import ru.practicum.shareit.booking.dto.ResponseBookingDto;
@@ -17,6 +18,7 @@ public class BookingController {
 
     private final BookingService bookingService;
 
+    @Validated
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseBookingDto bookingItemRequest(

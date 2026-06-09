@@ -132,8 +132,8 @@ public class BookingServiceImpl implements BookingService {
 
         LocalDateTime dateTime = LocalDateTime.now();
 
-        Optional<User> findUser = userRepositoryJpa.findById(userId);
-        if (findUser.isEmpty()) {
+        boolean findUser = userRepositoryJpa.existsById(userId);
+        if (!findUser) {
             throw new NotFoundException("Пользователь с ID " + userId + " не найден.");
         }
 
@@ -173,8 +173,8 @@ public class BookingServiceImpl implements BookingService {
 
         LocalDateTime dateTime = LocalDateTime.now();
 
-        Optional<User> findUser = userRepositoryJpa.findById(userId);
-        if (findUser.isEmpty()) {
+        boolean findUser = userRepositoryJpa.existsById(userId);
+        if (!findUser) {
             throw new NotFoundException("Пользователь с ID " + userId + " не найден.");
         }
 

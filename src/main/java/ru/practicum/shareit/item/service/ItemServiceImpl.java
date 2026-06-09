@@ -55,9 +55,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemResponseDto> userItems(Long ownerId) {
 
-        Optional<User> owner = userRepository.findById(ownerId);
-        if (owner.isEmpty()) {
-            throw new NotFoundException("Пользователь с ID " + ownerId + " не найден");
+        boolean findUser = userRepository.existsById(ownerId);
+        if (!findUser) {
+            throw new NotFoundException("Пользователь с ID " + ownerId + " не найден.");
         }
 
         List<ItemResponseDto> items = itemRepository.findByUserId(ownerId).stream()

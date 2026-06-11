@@ -4,14 +4,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemResponseDto;
-import ru.practicum.shareit.item.dto.NewItemRequestDto;
-import ru.practicum.shareit.item.dto.UpdateItemRequestDto;
+import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public class ItemController {
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public List<ItemResponseDto> searchItemForBooking(@RequestParam() String text) {
-        return itemService.searchItemsForBooking(text);
+        return itemService.searchItemsByText(text);
     }
 
     @PostMapping
@@ -61,5 +61,13 @@ public class ItemController {
         itemService.delete(itemId);
     }
 
+    @PostMapping("/{itemId}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentResponseDto createComment(@Positive @PathVariable Long itemId,
+                                            @RequestHeader(value = "X-Sharer-User-Id") @Positive Long userId,
+                                            @Valid @RequestBody CommentRequestDto comment
+                                            ) {
+        return itemService.createComment(itemId, userId, comment);
+    }
 
 }

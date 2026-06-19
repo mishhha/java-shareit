@@ -37,7 +37,7 @@ public class ItemRequestMapper {
         dto.setRequesterId(response.getRequester().getId());
         dto.setCreated(response.getDateTime());
 
-        if(response.getItems() != null) {
+        if (response.getItems() != null) {
             List<ItemResponseFromRequestDto> itemResponse = response.getItems().stream()
                 .map(this::mapToResponseFromRequestDto)
                 .toList();

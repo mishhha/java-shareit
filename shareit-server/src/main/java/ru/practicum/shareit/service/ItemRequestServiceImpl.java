@@ -28,7 +28,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
         Optional<User> findUser = userRepositoryJpa.findById(requesterId);
 
-        if(findUser.isEmpty()) {
+        if (findUser.isEmpty()) {
             throw new NotFoundException("Пользователь с ID " + requesterId + " не найден");
         }
 
@@ -49,7 +49,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
         boolean findUser = userRepositoryJpa.existsById(requesterId);
 
-        if(!findUser) {
+        if (!findUser) {
             throw new NotFoundException("Пользователь с ID " + requesterId + " не найден");
         }
 
@@ -67,7 +67,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     public ItemRequestDto findItemRequestById(Long requestId) {
         Optional<ItemRequest> request = itemRequestStorage.findItemRequestById(requestId);
-        if(request.isEmpty()) {
+        if (request.isEmpty()) {
             throw new NotFoundException("Запрос с ID " + requestId + " не найден.");
         }
         return mapper.mapToItemRequestDto(request.get());

@@ -133,9 +133,9 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemMapper.mapToItem(newItemRequestDto);
         item.setUser(owner.get());
 
-        if(newItemRequestDto.getRequestId() != null) {
+        if (newItemRequestDto.getRequestId() != null) {
             Optional<ItemRequest> itemRequest = itemRequestStorage.findItemRequestById(newItemRequestDto.getRequestId());
-            if(itemRequest.isEmpty()) {
+            if (itemRequest.isEmpty()) {
                 throw new NotFoundException("Запрос с ID " + newItemRequestDto.getRequestId() + " не найден.");
             }
             item.setRequest(itemRequest.get());

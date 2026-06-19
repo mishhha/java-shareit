@@ -41,7 +41,7 @@ services:
 
   gateway:
     build: 
-      context: ./shareit-gateway
+      context: ./gateway
       dockerfile: Dockerfile
     container_name: shareit-gateway
     ports:

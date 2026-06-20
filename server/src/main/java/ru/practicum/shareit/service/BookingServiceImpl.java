@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.dto.booking.RequestBookingDto;
 import ru.practicum.shareit.dto.booking.ResponseBookingDto;
-import ru.practicum.shareit.exceptions.ConflictException;
 import ru.practicum.shareit.exceptions.ForbiddenException;
+import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.mapper.BookingMapper;
 import ru.practicum.shareit.model.Booking;
 import ru.practicum.shareit.model.BookingStatus;
@@ -51,25 +51,25 @@ public class BookingServiceImpl implements BookingService {
         Item item = findItem.get();
 
         if (bookerId.equals(item.getUser().getId())) {
-            throw new ForbiddenException("Нельзя бронировать свою же вещь.");
+            throw new ValidationException("Нельзя бронировать свою же вещь.");
         }
 
         if (!item.getAvailable()) {
-            throw new ConflictException("Вещь не доступна для бронирования.");
+            throw new ValidationException("Вещь не доступна для бронирования.");
         }
 
         LocalDateTime dateTime = LocalDateTime.now().minusSeconds(10);
 
         if (dto.getStart().isBefore(dateTime) || dto.getEnd().isBefore(dateTime)) {
-            throw new IllegalArgumentException("Нельзя назначить дату начала или окончания бронирования в прошлом.");
+            throw new ValidationException("Нельзя назначить дату начала или окончания бронирования в прошлом.");
         }
 
         if (dto.getEnd().isBefore(dto.getStart())) {
-            throw new IllegalArgumentException("Бронирование не может закончиться раньше начала");
+            throw new ValidationException("Бронирование не может закончиться раньше начала");
         }
 
         if (dto.getEnd().equals(dto.getStart())) {
-            throw new IllegalArgumentException("Время бронирования не может быть равно 0");
+            throw new ValidationException("Время бронирования не может быть равно 0");
         }
 
         Booking booking = mapper.mapToBooking(dto);

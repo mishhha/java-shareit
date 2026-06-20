@@ -23,7 +23,7 @@ public class ItemRequest {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
     private User requester;
-    @Column(name = "dateTime")
+    @Column(name = "created")
     private LocalDateTime dateTime;
     @OneToMany(mappedBy = "request")
     private List<Item> items;

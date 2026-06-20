@@ -10,7 +10,6 @@ public class ItemRequestBodyDto {
 
     @NotBlank(message = "Описание не может быть пустым")
     private String description;
-    private Long ownerId;
     private LocalDateTime dateTime;
 
 }

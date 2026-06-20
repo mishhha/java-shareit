@@ -12,7 +12,6 @@ import ru.practicum.shareit.model.User;
 import ru.practicum.shareit.repository.UserRepositoryJpa;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -59,11 +58,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     public ItemRequestDto findItemRequestById(Long requestId) {
-        Optional<ItemRequest> request = itemRequestStorage.findItemRequestById(requestId);
-        if (request.isEmpty()) {
-            throw new NotFoundException("Запрос с ID " + requestId + " не найден.");
-        }
-        return mapper.mapToItemRequestDto(request.get());
+        ItemRequest request = itemRequestStorage.findItemRequestById(requestId)
+            .orElseThrow(() -> new NotFoundException("Запрос с ID " + requestId + " не найден."));
+
+        return mapper.mapToItemRequestDto(request);
     }
 
 }

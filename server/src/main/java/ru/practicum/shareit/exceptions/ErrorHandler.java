@@ -32,4 +32,10 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidation(ValidationException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
 }

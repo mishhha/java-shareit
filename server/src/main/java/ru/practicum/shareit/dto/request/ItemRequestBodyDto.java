@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 public class ItemRequestBodyDto {
 
     private String description;
-    private Long ownerId;
     private LocalDateTime dateTime;
 
 }

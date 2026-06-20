@@ -13,7 +13,10 @@ import java.util.List;
 @Component
 public class ItemRequestMapper {
 
-    public ItemRequest mapToItemRequest(ItemRequestBodyDto dto, LocalDateTime dateTime) {
+    public ItemRequest mapToItemRequest(ItemRequestBodyDto dto) {
+
+        LocalDateTime dateTime = LocalDateTime.now();
+
         ItemRequest itemRequest = new ItemRequest();
         itemRequest.setDescription(dto.getDescription());
         itemRequest.setDateTime(dateTime);

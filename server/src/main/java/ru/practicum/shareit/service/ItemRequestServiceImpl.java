@@ -26,18 +26,12 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public ItemRequestDto save(ItemRequestBodyDto requestBodyDto, Long requesterId) {
 
-        Optional<User> findUser = userRepositoryJpa.findById(requesterId);
+        User findUser = userRepositoryJpa.findById(requesterId)
+            .orElseThrow(() -> new NotFoundException("Пользователь с ID " + requesterId + " не найден"));
 
-        if (findUser.isEmpty()) {
-            throw new NotFoundException("Пользователь с ID " + requesterId + " не найден");
-        }
+        ItemRequest newItemRequest = mapper.mapToItemRequest(requestBodyDto);
 
-        LocalDateTime dateTime = LocalDateTime.now();
-
-        User user = findUser.get();
-
-        ItemRequest newItemRequest = mapper.mapToItemRequest(requestBodyDto, dateTime);
-        newItemRequest.setRequester(user);
+        newItemRequest.setRequester(findUser);
 
         ItemRequest itemRequest = itemRequestStorage.save(newItemRequest);
 

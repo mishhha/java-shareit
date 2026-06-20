@@ -1,10 +1,10 @@
 package ru.practicum.shareit.service;
 
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exceptions.ConflictException;
 import ru.practicum.shareit.mapper.BookingMapper;
 import ru.practicum.shareit.model.Booking;
 import ru.practicum.shareit.model.BookingStatus;
@@ -134,11 +134,11 @@ public class ItemServiceImpl implements ItemService {
         item.setUser(owner.get());
 
         if (newItemRequestDto.getRequestId() != null) {
-            Optional<ItemRequest> itemRequest = itemRequestStorage.findItemRequestById(newItemRequestDto.getRequestId());
-            if (itemRequest.isEmpty()) {
-                throw new NotFoundException("Запрос с ID " + newItemRequestDto.getRequestId() + " не найден.");
-            }
-            item.setRequest(itemRequest.get());
+            ItemRequest itemRequest = itemRequestStorage
+                .findItemRequestById(newItemRequestDto.getRequestId())
+                .orElseThrow(() ->
+                    new NotFoundException("Запрос с ID " + newItemRequestDto.getRequestId() + " не найден."));
+            item.setRequest(itemRequest);
         }
 
         Item newItem = itemRepository.save(item);
@@ -233,7 +233,7 @@ public class ItemServiceImpl implements ItemService {
         boolean hasRented = bookingRepository.existsApprovedCompletedBooking(itemId, userId, dateTime);
 
         if (!hasRented) {
-            throw new ValidationException("Оставлять отзыв может только арендатор.");
+            throw new ConflictException("Оставлять отзыв может только арендатор.");
         }
 
         Comment newComment = itemMapper.mapToComment(dto);

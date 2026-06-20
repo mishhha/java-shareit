@@ -1,11 +1,12 @@
 package ru.practicum.shareit.service;
 
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.dto.booking.RequestBookingDto;
 import ru.practicum.shareit.dto.booking.ResponseBookingDto;
+import ru.practicum.shareit.exceptions.ConflictException;
+import ru.practicum.shareit.exceptions.ForbiddenException;
 import ru.practicum.shareit.mapper.BookingMapper;
 import ru.practicum.shareit.model.Booking;
 import ru.practicum.shareit.model.BookingStatus;
@@ -50,25 +51,25 @@ public class BookingServiceImpl implements BookingService {
         Item item = findItem.get();
 
         if (bookerId.equals(item.getUser().getId())) {
-            throw new ValidationException("Нельзя бронировать свою же вещь.");
+            throw new ForbiddenException("Нельзя бронировать свою же вещь.");
         }
 
         if (!item.getAvailable()) {
-            throw new ValidationException("Вещь не доступна для бронирования.");
+            throw new ConflictException("Вещь не доступна для бронирования.");
         }
 
         LocalDateTime dateTime = LocalDateTime.now().minusSeconds(10);
 
         if (dto.getStart().isBefore(dateTime) || dto.getEnd().isBefore(dateTime)) {
-            throw new ValidationException("Нельзя назначить дату начала или окончания бронирования в прошлом.");
+            throw new IllegalArgumentException("Нельзя назначить дату начала или окончания бронирования в прошлом.");
         }
 
         if (dto.getEnd().isBefore(dto.getStart())) {
-            throw new ValidationException("Бронирование не может закончиться раньше начала");
+            throw new IllegalArgumentException("Бронирование не может закончиться раньше начала");
         }
 
         if (dto.getEnd().equals(dto.getStart())) {
-            throw new ValidationException("Время бронирования не может быть равно 0");
+            throw new IllegalArgumentException("Время бронирования не может быть равно 0");
         }
 
         Booking booking = mapper.mapToBooking(dto);
@@ -94,7 +95,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = findBooking.get();
 
         if (!booking.getItem().getUser().getId().equals(userId)) {
-            throw new ValidationException("Бронирование вещи может подтвердить только ее владелец");
+            throw new ForbiddenException("Бронирование вещи может подтвердить только ее владелец");
         }
 
         if (approved) {
@@ -120,7 +121,7 @@ public class BookingServiceImpl implements BookingService {
         if (!booking.getItem().getUser().getId().equals(userId) &&
             !booking.getBooker().getId().equals(userId)
         ) {
-            throw new ValidationException("Информацию о бронировании может получить только арендатор или владелец.");
+            throw new ForbiddenException("Информацию о бронировании может получить только арендатор или владелец.");
         }
 
         return mapper.mapToResponseBookingDto(booking);
@@ -159,7 +160,7 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepositoryJpa.findBookingsUserByIdAndStatus(userId, BookingStatus.REJECTED);
                 break;
             default:
-                throw new ValidationException("Не известное имя параметра " + state);
+                throw new IllegalArgumentException("Не известное имя параметра " + state);
         }
 
         return bookings.stream()
@@ -189,7 +190,7 @@ public class BookingServiceImpl implements BookingService {
             case "REJECTED" -> bookingRepositoryJpa.findBookingsForItemsByUserIdAndStatus(
                 userId, BookingStatus.REJECTED
             );
-            default         -> throw new ValidationException("Неизвестное состояние: " + state);
+            default         -> throw new IllegalArgumentException("Неизвестное состояние: " + state);
         };
 
         return bookings.stream()

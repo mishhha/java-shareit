@@ -1,6 +1,5 @@
 package ru.practicum.shareit.service;
 
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,7 +82,7 @@ public class UserServiceImpl implements UserService {
         ) {
             boolean find = repository.existsUserByEmail(updateUserRequestDto.getEmail());
             if (find) {
-                throw new ValidationException("Пользователь с email " +
+                throw new ConflictException("Пользователь с email " +
                     updateUserRequestDto.getEmail() +
                     " уже зарегистрирован."
                 );

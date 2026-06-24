@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
   postgres:
     image: postgres:14
     container_name: shareit-postgres
@@ -17,6 +18,44 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - shareit-network
+
+  server:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: shareit-server
+    ports:
+      - "9090:9090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/shareit
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - shareit-network
+
+
+  gateway:
+    build: 
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: shareit-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      SHAREIT_SERVER_URL: http://server:9090
+    depends_on:
+      - server
+    networks:
+      - shareit-network
+
+networks:
+  shareit-network:
+    driver: bridge
 
 volumes:
   postgres-data:
